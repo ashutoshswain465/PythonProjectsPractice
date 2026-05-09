@@ -12,7 +12,7 @@ w_len = random.randint(4, 10)
 
 print(f'Creating a list of 12 random words each of length {w_len}')
 
-filtered_list = [x for x in english_words if len(x) == w_len]
+filtered_list = [x.lower() for x in english_words if len(x) == w_len]
 words = random.sample(filtered_list, 12)
 
 print('The word list is: ')
@@ -22,31 +22,32 @@ print('\nSelecting the random word')
 word = random.choice(words)
 print('The random word is now selected. your job is to guess the word now. you have 12 guesses only.')
 
-guesses = ''
 turns = 12
+pos = 0
 
 while turns > 0:
     failed = 0
 
-    for char in word:
-        if char in guesses:
-            print(char, end=" ")
+    for index, char in enumerate(word):
+        if index < pos:
+            print(char, end=' ')
         else:
-            print("_")
+            print("_", end=' ')
             failed += 1
 
     if failed == 0:
-        print('You Win')
+        print('\nYou Win')
         print(f'The word is {word}')
         break
 
     guess = input("\nGuess a character: ")
-    guesses += guess
 
-    if guess not in word:
+    if guess not in word[pos]:
         turns -= 1
         print("Wrong")
         print(f'You have {turns} more guesses')
+    else:
+        pos += 1
 
     if turns == 0:
         print('You Lose')
