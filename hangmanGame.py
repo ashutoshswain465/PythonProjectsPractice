@@ -1,7 +1,16 @@
 import random
 import threading
-import time
+import pyautogui
 from collections import Counter
+
+
+def get_Input(container):
+    try:
+        c = input('Enter a letter to guess(5s limit): ').lower()
+        return container.append(c)
+    except EOFError:
+        pass
+
 
 someWords = '''apple banana mango strawberry
 orange grape pineapple apricot lemon coconut watermelon
@@ -26,17 +35,26 @@ if __name__ == '__main__':
             print()
             chances -= 1
 
-            guess = input('Enter a letter to guess: ').lower()
+            guess_list = []
+            input_thread = threading.Thread(target=get_Input, args=(guess_list,), daemon=True)
+            input_thread.start()
+            input_thread.join(timeout=5)
 
-            if not guess.isalpha():
-                print('Enter only a letter!')
-                continue
-            elif len(guess) > 1:
-                print('Enter only a single letter!')
-                continue
-            elif guess in letterGuessed:
-                print('You already guessed that letter!')
-                continue
+            guess = "".join(guess_list)
+
+            if not guess:
+                print('\nTime up. No input received.')
+                pyautogui.press('enter')
+            else:
+                if not guess.isalpha():
+                    print('Enter only a letter!')
+                    continue
+                elif len(guess) > 1:
+                    print('Enter only a single letter!')
+                    continue
+                elif guess in letterGuessed:
+                    print('You already guessed that letter!')
+                    continue
 
             if guess in word:
                 letterGuessed += guess * word.count(guess)
