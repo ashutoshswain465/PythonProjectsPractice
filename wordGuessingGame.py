@@ -42,12 +42,14 @@ while turns > 0:
 
     guess = input("\nGuess a character: ")
 
-    if guess not in word[pos]:
+    if guess != word[pos]:
         turns -= 1
         print("Wrong")
         print(f'You have {turns} more guesses')
     else:
-        pos += 1
+        if len(guess) == 1:
+            if guess.isalpha():
+                pos += 1
 
     if turns == 0:
         print('You Lose')
